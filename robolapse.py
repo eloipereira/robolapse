@@ -6,7 +6,7 @@ STEP = 21
 CW = 1
 CCW = 0
 SWITCH = 12
-excit_mode = 1
+excit_mode = 16
 
 lenght = 3500 * excit_mode
 speed1 = 1/0.0005
@@ -19,13 +19,13 @@ gpio.setup(SWITCH,gpio.IN,pull_up_down=gpio.PUD_UP)
 gpio.output(DIR,CW)
 
 # Return to home function
-def RTH(speed=500):
+def RTH(speed=1300.0):
 	try:
 		if gpio.input(SWITCH) == False:
 			at_home = True
 		else:
 			at_home = False
-
+		sleep(1)
 		while not at_home:
 			gpio.output(DIR,CCW)
 			gpio.output(STEP,gpio.HIGH)
