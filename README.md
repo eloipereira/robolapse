@@ -1,2 +1,2 @@
 # robolapse
-Motorised Time-lapse Rail with Raspberry Pi
+Motorized Time-lapse Rail with Raspberry Pi
