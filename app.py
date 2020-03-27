@@ -1,12 +1,12 @@
 import robolapse as rl
 import threading
-from flask import Flask, escape, request
+from flask import Flask, escape, request, render_template
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return "Welcome to the Robolapse app!"
+    return render_template('index.html')
 
 @app.route('/api/rth', methods=['GET'])
 def RTH():
