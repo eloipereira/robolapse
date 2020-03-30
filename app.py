@@ -25,7 +25,7 @@ def GOTO():
     th.start()
     return "Going to " + loc + " cm at " + speed + " cm/min"
 
-@app.route('/api/move', methods=['GET'])
+@app.route('/api/move', methods=['GET','POST'])
 def MOVE():
     length = request.args.get("length")
     speed = request.args.get("speed")
@@ -42,4 +42,4 @@ def MOVE():
 
 if __name__ == '__main__':
     app.jinja_env.cache = {}
-    app.run(debug=False, port=80, host='0.0.0.0')
+    app.run(debug=False, port=5000, host='0.0.0.0')

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Robolapse App</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="../static/jumbotron-narrow.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation" class="active"><a href="#">Home</a>
+                    </li>
+                    <li role="presentation"><a href="#">Config</a>
+                    </li>
+                    <li role="presentation"><a href="#">About</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="">
+                <br>
+                <br>
+                <br>
+                <h3 class="text-muted">Robolapse App</h3>
+            </div>
+        </div>
+        <div class="jumbotron">
+            <h3>Move a given distance at a given speed and direction</h3>
+            <form>
+                <div class="form-group row">
+                    <label for="input_distance" class="col-sm-2 col-form-label" type="number">Distance</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" id="input_distance" placeholder="Enter distance in cm">
+                    </div>
+                </div>
+                <div class="form-group  row">
+                    <label for="input_speed" class="col-sm-2 col-form-label" type="number">Speed</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" id="input_speed" placeholder="Enter speed in cm/min">
+                    </div>
+                </div>
+                <fieldset class="form-group">
+                    <div class="row">
+                        <label class="col-form-label col-sm-2 pt-0">Direction</label>
+                        <div class="col-sm-10">
+                            <div class="form-check" id=direction>
+                                <input class="form-check-input" type="radio" name="dirRadios" id="direction1" value="left" checked>
+                                <label class="form-check-label" for="inlineRadioLeft">
+                                    Left
+                                </label>
+                                <input class="form-check-input" type="radio" name="dirRadios" id="direction2" value="right">
+                                <label class="form-check-label" for="inlineRadioRight">
+                                    Right
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <button id="run" type="submit" class="btn btn-primary mb-2">Run</button>
+            </form>
+        </div>
+        <footer class="footer">
+            <p>etpereira & cmoliveira 2020</p>
+        </footer>
+
+    </div>
+</body>
+
+<script>
+$(document).ready(function () {
+$("#run").click(function (e) {
+        $.ajax({
+            type: "GET",
+            url: "http://192.168.43.31:5000/api/move?length=" + $("#input_distance").val() + "&speed= " + $("#input_speed").val() +" &direction="+ $('input[name="dirRadios"]:checked').val() ,
+            dataType: "text",
+            success: function (result, status, xhr) {
+                alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+            },
+            error: function (xhr, status, error) {
+                alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+            }
+        });
+});
+});
+</script>
+</html>
