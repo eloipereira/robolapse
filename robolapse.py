@@ -2,17 +2,23 @@ from time import sleep
 import RPi.GPIO as gpio
 import math
 import configparser as cp
+import gphoto2 as gp
 
-
-# Config
+#Config
 config = cp.ConfigParser()
 config.read('config.ini')
+# Config rail
 DIR = config.getint('DEFAULT','DIR')
 STEP = config.getint('DEFAULT','STEP')
 SWITCH = config.getint('DEFAULT','SWITCH')
 STEP_MODE = config.getint('DEFAULT','STEP_MODE') # 1 - full step; 2 - half microstep; 8 - 1/8 microstep; 16 - 1/16 microstep
 SPAN = config.getfloat('DEFAULT','SPAN') #cm
 SPAN_RATIO = config.getfloat('DEFAULT','SPAN_RATIO') #step/cm
+# Config video
+FRAME_RATE = config.getfloat('DEFAULT','FRAME_RATE') #frame/sec
+VIDEO_LENGTH = config.getfloat('DEFAULT','VIDEO_LENGTH') #sec
+
+
 LENGTH = SPAN * SPAN_RATIO * STEP_MODE
 CW = 1
 CCW = 0
@@ -28,7 +34,7 @@ def setup_gpio():
 
 #GOTO - go to a specific location in cm
 def GOTO(location=SPAN,speed=70.0):
-	RTH(speed)
+	RTH()
 	norm_location = float(location)/SPAN
 	global gpio_is_set
 	if not gpio_is_set:
@@ -107,10 +113,31 @@ def MOVE(length = 0.0,speed=70.0,direction=0):
 		       	sleep(delta_t/2.0)
 	       		gpio.output(STEP,gpio.LOW)
        			sleep(delta_t/2.0)
-
 	except KeyboardInterrupt:
 		print("Stop!")
 		pass
 	finally:
 		gpio.cleanup()
 		gpio_is_set = False
+
+# LAPS - Execute l laps in a given time t
+def LAPS(laps = 0.0,total_time=0.0):
+	location = laps*SPAN
+	speed = location/total_time
+	GOTO(location,speed)
+
+
+def CAPTURE_TIMELAPSE(total_time=0.0,video_rate=FRAME_RATE, video_length=VIDEO_LENGTH, override_period=False,period=0.0):
+	if not override_period:
+		n_frames = int(video_rate * video_length)
+		period = total_time * 60.0 / float(n_frames)
+	else:
+		n_frames = int(total_time * 60.0/period)
+	camera = gp.Camera()
+	camera.init()
+	print(n_frames)
+	for i in range(n_frames):
+		print('Capturing image')
+		camera.capture(gp.GP_CAPTURE_IMAGE)
+		sleep(period)
+	camera.exit()

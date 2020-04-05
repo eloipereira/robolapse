@@ -32,26 +32,37 @@
             </div>
         </div>
         <div class="jumbotron">
-            <h3>Timelapse configuration</h3>
+            <h3>Move a given distance at a given speed and direction</h3>
             <form>
                 <div class="form-group row">
-                    <label for="laps" class="col-sm-2 col-form-label" type="number">Laps</label>
+                    <label for="input_distance" class="col-sm-2 col-form-label" type="number">Distance</label>
                     <div class="col-sm-10">
-                        <input class="form-control" id="laps" placeholder="Enter the number of laps">
+                        <input class="form-control" id="input_distance" placeholder="Enter distance in cm">
                     </div>
                 </div>
                 <div class="form-group  row">
-                    <label for="time" class="col-sm-2 col-form-label" type="number">Time</label>
+                    <label for="input_speed" class="col-sm-2 col-form-label" type="number">Speed</label>
                     <div class="col-sm-10">
-                        <input class="form-control" id="time" placeholder="Enter total time in min">
+                        <input class="form-control" id="input_speed" placeholder="Enter speed in cm/min">
                     </div>
                 </div>
-                <div class="form-group  row">
-                    <label for="dt" class="col-sm-2 col-form-label" type="number">Frame interval</label>
-                    <div class="col-sm-10">
-                        <input class="form-control" id="dt" placeholder="Enter frame interval in sec">
+                <fieldset class="form-group">
+                    <div class="row">
+                        <label class="col-form-label col-sm-2 pt-0">Direction</label>
+                        <div class="col-sm-10">
+                            <div class="form-check" id=direction>
+                                <input class="form-check-input" type="radio" name="dirRadios" id="direction1" value="left" checked>
+                                <label class="form-check-label" for="inlineRadioLeft">
+                                    Left
+                                </label>
+                                <input class="form-check-input" type="radio" name="dirRadios" id="direction2" value="right">
+                                <label class="form-check-label" for="inlineRadioRight">
+                                    Right
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </fieldset>
                 <button id="run" type="submit" class="btn btn-primary mb-2">Run</button>
             </form>
         </div>
@@ -67,18 +78,7 @@ $(document).ready(function () {
 $("#run").click(function (e) {
         $.ajax({
             type: "GET",
-            url: "http://192.168.43.31:5000/api/capture_tl?t=" + $("#time").val() + "&override_period=True" +" &dt="+ $("#dt").val() ,
-            dataType: "text",
-            success: function (result, status, xhr) {
-                alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
-            },
-            error: function (xhr, status, error) {
-                alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
-            }
-        });
-        $.ajax({
-            type: "GET",
-            url: "http://192.168.43.31:5000/api/laps?n=" + $("#laps").val() + " &t="+ $("#time").val() ,
+            url: "http://192.168.43.31:5000/api/move?length=" + $("#input_distance").val() + "&speed= " + $("#input_speed").val() +" &direction="+ $('input[name="dirRadios"]:checked').val() ,
             dataType: "text",
             success: function (result, status, xhr) {
                 alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
