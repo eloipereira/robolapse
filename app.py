@@ -1,4 +1,4 @@
-import robolapse as rl
+from robolapse import *
 import threading
 import configparser as cp
 from flask import Flask, escape, request, render_template
@@ -17,6 +17,8 @@ SPAN_RATIO = config.getfloat('DEFAULT','SPAN_RATIO') #step/cm
 FRAME_RATE = config.getfloat('DEFAULT','FRAME_RATE') #frame/sec
 VIDEO_LENGTH = config.getfloat('DEFAULT','VIDEO_LENGTH') #sec
 
+rl = Robolapse()
+rl.initialize()
 
 app = Flask(__name__)
 
@@ -31,15 +33,6 @@ def RTH():
     th.daemon=True
     th.start()
     return "Returning to home at " + speed + " cm/min"
-
-@app.route('/api/goto', methods=['GET'])
-def GOTO():
-    loc = request.args.get("location")
-    speed = request.args.get("speed")
-    th = threading.Thread(target=rl.GOTO, args = [float(loc),float(speed)])
-    th.daemon=True
-    th.start()
-    return "Going to " + loc + " cm at " + speed + " cm/min"
 
 @app.route('/api/move', methods=['GET','POST'])
 def MOVE():
