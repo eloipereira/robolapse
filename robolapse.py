@@ -106,10 +106,10 @@ class Robolapse:
 					gpio.output(STEP,gpio.LOW)
 					sleep(delta_t/2.0)
 					self.position = self.position + float((2.0*direction-1.0)/(SPAN_RATIO * STEP_MODE))
-					if (math.floor(self.position*SPAN_RATIO * STEP_MODE)) % LENGTH == 0:
+					if (math.floor(self.position*SPAN_RATIO * STEP_MODE)+1) % LENGTH == 0:
 						direction = (direction + 1)%2
 						gpio.output(DIR,direction)
-			except KeyboardInterrupt:
+			except (KeyboardInterrupt,SystemExit):
 				print("Stop!")
 				pass
 			finally:
@@ -126,9 +126,7 @@ class Robolapse:
 			n_frames = int(total_time * 60.0/period)
 		camera = gp.Camera()
 		camera.init()
-		print(n_frames)
 		for i in range(n_frames):
-			print('Capturing image')
 			camera.capture(gp.GP_CAPTURE_IMAGE)
 			sleep(period)
 		camera.exit()

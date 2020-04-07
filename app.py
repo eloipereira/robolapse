@@ -1,6 +1,7 @@
 from robolapse import *
 import threading
 import configparser as cp
+import sys
 from flask import Flask, escape, request, render_template
 
 #Config
@@ -25,6 +26,10 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/move')
+def move():
+    return render_template('move.html')
 
 @app.route('/api/rth', methods=['GET'])
 def RTH():
@@ -67,6 +72,7 @@ def CAPTURE_TIMELAPSE():
     th = threading.Thread(target=rl.CAPTURE_TIMELAPSE, args = [t,r, vl, op,dt])
     th.daemon=True
     th.start()
+
 
 if __name__ == '__main__':
     app.jinja_env.cache = {}
